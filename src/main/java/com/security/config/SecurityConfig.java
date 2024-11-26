@@ -37,7 +37,18 @@ public class SecurityConfig  {
 
         return httpSecurity
                 .authorizeHttpRequests(authorize-> authorize
-                        .requestMatchers("/","/login","/fragments/**","/assets/**","/images/**").permitAll()
+                        .requestMatchers("/user/**").hasRole("Admin")
+                        .requestMatchers("/project/**").hasRole("Manager")
+                        .requestMatchers("/task/**").hasRole("Manager")
+                        .requestMatchers("/task/employee/**").hasRole("Employee")
+                        //.requestMatchers("/task/employee/**").hasAnyRole("Employee","Admin","Manager")
+                        .requestMatchers(
+                                "/",
+                                "/login",
+                                "/fragments/**",
+                                "/assets/**",
+                                "/images/**"
+                        ).permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .build();
