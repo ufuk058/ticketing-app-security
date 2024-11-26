@@ -18,7 +18,7 @@ public class User extends BaseEntity{
     private String phone;
     @Column(unique = true)
     private String userName;
-    private String password;
+    private String passWord;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;

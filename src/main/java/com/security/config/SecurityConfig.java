@@ -18,30 +18,30 @@ import java.util.List;
 @Configuration
 public class SecurityConfig  {
 
-    @Bean
-    UserDetailsService userDetailsService(PasswordEncoder passwordEncoder){
-
-        List<UserDetails> userList= new ArrayList<>();
-
-        User user1= new User("mike", passwordEncoder.encode("password"),
-                List.of(new SimpleGrantedAuthority("ROLE_Admin")));
-        User user2= new User("ozzy", passwordEncoder.encode("password"),
-                List.of(new SimpleGrantedAuthority("ROLE_Manager")));
-        userList.add(user1); userList.add(user2);
-
-        return new InMemoryUserDetailsManager(userList);
-    }
+//    @Bean
+//    UserDetailsService userDetailsService(PasswordEncoder passwordEncoder){
+//
+//        List<UserDetails> userList= new ArrayList<>();
+//
+//        User user1= new User("mike", passwordEncoder.encode("password"),
+//                List.of(new SimpleGrantedAuthority("ROLE_Admin")));
+//        User user2= new User("ozzy", passwordEncoder.encode("password"),
+//                List.of(new SimpleGrantedAuthority("ROLE_Manager")));
+//        userList.add(user1); userList.add(user2);
+//
+//        return new InMemoryUserDetailsManager(userList);
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
 
         return httpSecurity
                 .authorizeHttpRequests(authorize-> authorize
-                        .requestMatchers("/user/**").hasRole("Admin")
-                        .requestMatchers("/project/**").hasRole("Manager")
-                        .requestMatchers("/task/**").hasRole("Manager")
-                        .requestMatchers("/task/employee/**").hasRole("Employee")
-                        //.requestMatchers("/task/employee/**").hasAnyRole("Employee","Admin","Manager")
+                        .requestMatchers("/user/**").hasAuthority("Admin")
+                        .requestMatchers("/project/**").hasAuthority("Manager")
+                        .requestMatchers("/task/**").hasAuthority("Manager")
+                        .requestMatchers("/task/employee/**").hasAuthority("Employee")
+                        //.requestMatchers("/task/employee/**").hasAuthority("Employee","Admin","Manager")
                         .requestMatchers(
                                 "/",
                                 "/login",
@@ -57,7 +57,5 @@ public class SecurityConfig  {
                         .failureUrl("/login?error=true")
                         .permitAll())
                 .build();
-
-
     }
 }
