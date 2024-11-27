@@ -54,4 +54,8 @@ public class UserPrincipal implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public Long getId(){
+        this.user.getId();
+    }
 }
