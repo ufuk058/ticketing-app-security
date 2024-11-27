@@ -1,5 +1,6 @@
 package com.security.config;
 
+import com.security.service.SecurityService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -18,6 +19,12 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig  {
+
+    private final SecurityService securityService;
+
+    public SecurityConfig(SecurityService securityService) {
+        this.securityService = securityService;
+    }
 
 //    @Bean
 //    UserDetailsService userDetailsService(PasswordEncoder passwordEncoder){
@@ -51,7 +58,7 @@ public class SecurityConfig  {
                                 "/images/**"
                         ).permitAll()
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
+              //  .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/welcome")
@@ -60,6 +67,10 @@ public class SecurityConfig  {
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login"))
+                .rememberMe(remember -> remember
+                        .tokenValiditySeconds(120)
+                        .key("security")
+                        .userDetailsService(securityService))
 
                 .build();
     }
