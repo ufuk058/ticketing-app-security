@@ -10,6 +10,7 @@ import com.security.service.ProjectService;
 import com.security.service.TaskService;
 import com.security.service.UserService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +22,15 @@ public class UserServiceImpl implements UserService {
     private final MapperUtil mapperUtil;
     private final ProjectService projectService;
     private final TaskService taskService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, MapperUtil mapperUtil, @Lazy ProjectService projectService,  @Lazy TaskService taskService) {
+    public UserServiceImpl(UserRepository userRepository, MapperUtil mapperUtil, @Lazy ProjectService projectService, @Lazy TaskService taskService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
        // this.userMapper = userMapper;
         this.mapperUtil = mapperUtil;
         this.projectService = projectService;
         this.taskService = taskService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -47,7 +50,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(UserDTO dto) {
 
-        userRepository.save(mapperUtil.convert(dto,User.class));
+        User convertedUser= mapperUtil.convert(dto,User.class);
+        convertedUser.setPassWord(passwordEncoder.encode(convertedUser.getPassWord()));
+        userRepository.save(convertedUser);
 
     }
 
