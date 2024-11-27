@@ -21,9 +21,11 @@ import java.util.List;
 public class SecurityConfig  {
 
     private final SecurityService securityService;
+    private final AuthSuccessHandler authSuccessHandler;
 
-    public SecurityConfig(SecurityService securityService) {
+    public SecurityConfig(SecurityService securityService, AuthSuccessHandler authSuccessHandler) {
         this.securityService = securityService;
+        this.authSuccessHandler = authSuccessHandler;
     }
 
 //    @Bean
@@ -58,10 +60,11 @@ public class SecurityConfig  {
                                 "/images/**"
                         ).permitAll()
                         .anyRequest().authenticated())
-              //  .httpBasic(Customizer.withDefaults())
+//                .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/welcome")
+//                        .defaultSuccessUrl("/welcome")
+                        .successHandler(authSuccessHandler)
                         .failureUrl("/login?error=true")
                         .permitAll())
                 .logout(logout -> logout
