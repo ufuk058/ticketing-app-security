@@ -11,6 +11,7 @@ import com.security.service.ProjectService;
 import com.security.service.TaskService;
 import com.security.service.UserService;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -86,7 +87,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDTO> listAllProjectDetails() {
-        UserDTO currentUser = userService.findByUserName("harold@manager.com");
+        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+        UserDTO currentUser = userService.findByUserName(username);
         User user = mapperUtil.convert(currentUser,User.class);
         List<Project> list = projectRepository.findAllByAssignedManager(user);
 
